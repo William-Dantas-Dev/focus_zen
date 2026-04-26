@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../application/timer_controller.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/controls.dart';
 import '../widgets/home_header.dart';
@@ -9,49 +11,17 @@ import '../widgets/timer_circle.dart';
 import '../widgets/timer_preset_bottom_sheet.dart';
 import '../widgets/timer_preset_option.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  double progress = 0.72;
+class _HomePageState extends ConsumerState<HomePage> {
   int currentIndex = 0;
 
-  late TimerPresetOption selectedPreset;
-  late String time;
-  late String sessionText;
-
-  PomodoroMode mode = PomodoroMode.focus;
-
-  @override
-  void initState() {
-    super.initState();
-
-    selectedPreset = timerPresetOptions.first;
-    time = _formatMinutes(selectedPreset.focusMinutes);
-    sessionText = 'SESSION 1/${selectedPreset.cycles}';
-  }
-
-  String _formatMinutes(int minutes) {
-    return '${minutes.toString().padLeft(2, '0')}:00';
-  }
-
-  void _selectPreset(TimerPresetOption preset) {
-    setState(() {
-      selectedPreset = preset;
-      time = _formatMinutes(preset.focusMinutes);
-      sessionText = 'SESSION 1/${preset.cycles}';
-      progress = 0;
-      mode = PomodoroMode.focus;
-    });
-
-    Navigator.pop(context);
-  }
-
-  void _openPresetBottomSheet() {
+  void _openPresetBottomSheet(TimerPresetOption selectedPreset) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -59,7 +29,10 @@ class _HomePageState extends State<HomePage> {
       builder: (_) {
         return TimerPresetBottomSheet(
           selectedPreset: selectedPreset,
-          onPresetSelected: _selectPreset,
+          onPresetSelected: (preset) {
+            ref.read(timerControllerProvider.notifier).selectPreset(preset);
+            Navigator.pop(context);
+          },
         );
       },
     );
@@ -67,6 +40,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final timer = ref.watch(timerControllerProvider);
+    final controller = ref.read(timerControllerProvider.notifier);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -85,25 +61,30 @@ class _HomePageState extends State<HomePage> {
 
                 HomeHeader(
                   onMenuTap: () {},
-                  onSettingsTap: _openPresetBottomSheet,
+                  onSettingsTap: () =>
+                      _openPresetBottomSheet(timer.selectedPreset),
                 ),
 
                 const Spacer(),
 
-                ModeChip(mode: mode),
+                ModeChip(mode: timer.mode),
 
                 const SizedBox(height: 42),
 
                 TimerCircle(
-                  progress: progress,
-                  time: time,
-                  sessionText: sessionText,
+                  progress: timer.progress,
+                  time: timer.formattedTime,
+                  sessionText: timer.sessionText,
                 ),
 
                 const SizedBox(height: 48),
 
-                Controls(onPlay: () {}, onReset: () {}, onSkip: () {}),
-
+                Controls(
+                  isRunning: timer.isRunning,
+                  onPlay: controller.toggle,
+                  onReset: controller.reset,
+                  onSkip: controller.skip,
+                ),
                 const Spacer(),
 
                 BottomNav(
