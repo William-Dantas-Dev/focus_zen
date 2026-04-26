@@ -23,6 +23,10 @@ class TimerPresetOption {
   String get chipSubtitle {
     return '$focusMinutes / $shortBreakMinutes / $longBreakMinutes';
   }
+
+  String get compact {
+    return '${focusMinutes}m · ${shortBreakMinutes}m · ${cycles}x';
+  }
 }
 
 const List<TimerPresetOption> timerPresetOptions = [

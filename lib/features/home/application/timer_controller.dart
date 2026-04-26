@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/models/timer_preset_option.dart';
+import '../data/repositories/timer_preset_repository.dart';
 import '../presentation/widgets/mode_chip.dart';
-import '../presentation/widgets/timer_preset_option.dart';
 import 'timer_state.dart';
 
 final timerControllerProvider = NotifierProvider<TimerController, TimerState>(
@@ -22,7 +23,26 @@ class TimerController extends Notifier<TimerState> {
     final preset = timerPresetOptions.first;
     final totalSeconds = preset.focusMinutes * 60;
 
+    _loadSavedPreset();
+
     return TimerState(
+      selectedPreset: preset,
+      mode: PomodoroMode.focus,
+      remainingSeconds: totalSeconds,
+      totalSeconds: totalSeconds,
+      currentSession: 1,
+      isRunning: false,
+    );
+  }
+
+  Future<void> _loadSavedPreset() async {
+    final preset = await ref
+        .read(timerPresetRepositoryProvider)
+        .getSelectedPreset();
+
+    final totalSeconds = preset.focusMinutes * 60;
+
+    state = TimerState(
       selectedPreset: preset,
       mode: PomodoroMode.focus,
       remainingSeconds: totalSeconds,
@@ -79,8 +99,12 @@ class TimerController extends Notifier<TimerState> {
     _goToNextMode();
   }
 
-  void selectPreset(TimerPresetOption preset) {
+  Future<void> selectPreset(TimerPresetOption preset) async {
     _timer?.cancel();
+
+    await ref
+        .read(timerPresetRepositoryProvider)
+        .saveSelectedPresetId(preset.id);
 
     final totalSeconds = preset.focusMinutes * 60;
 

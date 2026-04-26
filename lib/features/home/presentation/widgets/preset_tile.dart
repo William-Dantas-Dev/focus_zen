@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import 'timer_preset_option.dart';
+import '../../data/models/timer_preset_option.dart';
 
 class PresetTile extends StatelessWidget {
   const PresetTile({super.key, 

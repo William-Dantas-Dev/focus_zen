@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../application/timer_controller.dart';
+import '../../data/models/timer_preset_option.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/controls.dart';
 import '../widgets/home_header.dart';
 import '../widgets/mode_chip.dart';
 import '../widgets/timer_circle.dart';
 import '../widgets/timer_preset_bottom_sheet.dart';
-import '../widgets/timer_preset_option.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});

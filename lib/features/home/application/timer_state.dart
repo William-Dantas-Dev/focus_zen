@@ -1,5 +1,5 @@
+import '../data/models/timer_preset_option.dart';
 import '../presentation/widgets/mode_chip.dart';
-import '../presentation/widgets/timer_preset_option.dart';
 
 class TimerState {
   const TimerState({

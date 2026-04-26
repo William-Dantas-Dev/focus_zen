@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../data/models/timer_preset_option.dart';
 import 'preset_tile.dart';
-import 'timer_preset_option.dart';
 
 class TimerPresetBottomSheet extends StatelessWidget {
   const TimerPresetBottomSheet({
