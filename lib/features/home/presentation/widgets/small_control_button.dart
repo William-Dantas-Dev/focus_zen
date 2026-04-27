@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
-
 class SmallControlButton extends StatelessWidget {
   const SmallControlButton({
     super.key,
@@ -14,14 +12,17 @@ class SmallControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
       color: Colors.transparent,
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
-        splashColor: AppColors.primary.withValues(alpha: 0.15),
-        highlightColor: AppColors.primary.withValues(alpha: 0.08),
+        splashColor: colorScheme.primary.withValues(alpha: 0.15),
+        highlightColor: colorScheme.primary.withValues(alpha: 0.08),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
@@ -29,15 +30,21 @@ class SmallControlButton extends StatelessWidget {
           height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withValues(alpha: 0.05),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.04),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.08),
+                color: colorScheme.primary.withValues(alpha: 0.08),
                 blurRadius: 12,
               ),
             ],
           ),
-          child: Icon(icon, color: AppColors.textSecondary, size: 24),
+          child: Icon(
+            icon,
+            color: colorScheme.onSurface.withValues(alpha: 0.65),
+            size: 24,
+          ),
         ),
       ),
     );

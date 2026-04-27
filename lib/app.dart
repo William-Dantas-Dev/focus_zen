@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
-import 'features/home/presentation/pages/home_page.dart';
+import 'features/shell/presentation/pages/main_shell_page.dart';
 
 class FocusZenApp extends ConsumerWidget {
   const FocusZenApp({super.key});
@@ -18,7 +18,7 @@ class FocusZenApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
-      home: const HomePage(),
+      home: const MainShellPage(),
     );
   }
 }

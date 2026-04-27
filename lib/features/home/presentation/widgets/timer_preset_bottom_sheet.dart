@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../data/models/timer_preset_option.dart';
 import 'preset_tile.dart';
 
@@ -16,16 +15,26 @@ class TimerPresetBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.08),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.35)
+                : Colors.black.withValues(alpha: 0.12),
             blurRadius: 30,
             offset: const Offset(0, 16),
           ),
@@ -41,7 +50,7 @@ class TimerPresetBottomSheet extends StatelessWidget {
                 width: 44,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.16),
+                  color: colorScheme.onSurface.withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -52,8 +61,8 @@ class TimerPresetBottomSheet extends StatelessWidget {
                 children: [
                   Text(
                     'Choose timer',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textPrimary,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -61,7 +70,7 @@ class TimerPresetBottomSheet extends StatelessWidget {
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close_rounded),
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurface.withValues(alpha: 0.65),
                   ),
                 ],
               ),
@@ -69,7 +78,7 @@ class TimerPresetBottomSheet extends StatelessWidget {
               const SizedBox(height: 12),
 
               ...timerPresetOptions.map((preset) {
-                final isSelected = preset == selectedPreset;
+                final isSelected = preset.id == selectedPreset.id;
 
                 return PresetTile(
                   preset: preset,

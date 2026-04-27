@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import 'timer_progress_painter.dart';
 
 class TimerCircle extends StatelessWidget {
@@ -17,6 +16,10 @@ class TimerCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       width: 260,
       height: 260,
@@ -28,37 +31,47 @@ class TimerCircle extends StatelessWidget {
             height: 240,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.darkSurface.withValues(alpha: 0.45),
+              color: isDark
+                  ? colorScheme.surface.withValues(alpha: 0.45)
+                  : colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.22),
+                  color: colorScheme.primary.withValues(alpha: 0.22),
                   blurRadius: 54,
                   spreadRadius: 8,
                 ),
               ],
             ),
           ),
-
           TweenAnimationBuilder<double>(
             tween: Tween<double>(begin: 0, end: progress),
             duration: const Duration(milliseconds: 950),
             curve: Curves.linear,
             builder: (context, animatedProgress, child) {
               return CustomPaint(
-                size: const Size(260, 260),
-                painter: TimerProgressPainter(progress: progress),
+                size: const Size(250, 250),
+                painter: TimerProgressPainter(
+                  progress: animatedProgress,
+                  backgroundColor: colorScheme.onSurface.withValues(
+                    alpha: 0.08,
+                  ),
+                  progressColors: [
+                    colorScheme.primary,
+                    colorScheme.primary.withValues(alpha: 0.65),
+                  ],
+                  glowColor: colorScheme.primary.withValues(alpha: 0.35),
+                ),
               );
             },
           ),
-
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 time,
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                style: textTheme.displayLarge?.copyWith(
                   fontSize: 62,
-                  color: AppColors.textPrimary,
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -3,
                 ),
@@ -66,8 +79,8 @@ class TimerCircle extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 sessionText,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppColors.textMuted,
+                style: textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
                   letterSpacing: 4,
                 ),
               ),

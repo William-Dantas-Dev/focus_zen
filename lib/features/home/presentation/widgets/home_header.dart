@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import 'header_icon_button.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -15,27 +14,29 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
-        // Menu
-        HeaderIconButton(icon: Icons.menu_rounded, onTap: onMenuTap),
-
+        HeaderIconButton(
+          icon: Icons.menu_rounded,
+          onTap: onMenuTap,
+        ),
         const Spacer(),
-
-        // Title
         Text(
           'FOCUSZEN',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: AppColors.textPrimary,
+          style: textTheme.titleMedium?.copyWith(
+            color: colorScheme.onSurface,
             letterSpacing: 5,
             fontWeight: FontWeight.w600,
           ),
         ),
-
         const Spacer(),
-
-        // Settings (troca de preset / configurações)
-        HeaderIconButton(icon: Icons.tune_rounded, onTap: onSettingsTap),
+        HeaderIconButton(
+          icon: Icons.tune_rounded,
+          onTap: onSettingsTap,
+        ),
       ],
     );
   }

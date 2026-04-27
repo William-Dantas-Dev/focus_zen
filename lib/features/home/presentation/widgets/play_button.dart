@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
-
 class PlayButton extends StatelessWidget {
-  const PlayButton({super.key, required this.onTap, required this.isRunning});
+  const PlayButton({
+    super.key,
+    required this.onTap,
+    required this.isRunning,
+  });
 
   final VoidCallback onTap;
   final bool isRunning;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: Colors.transparent,
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
-        splashColor: AppColors.primary.withValues(alpha: 0.2),
-        highlightColor: AppColors.primary.withValues(alpha: 0.1),
+        splashColor: colorScheme.primary.withValues(alpha: 0.2),
+        highlightColor: colorScheme.primary.withValues(alpha: 0.1),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
@@ -28,11 +32,14 @@ class PlayButton extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF8AFF8A), Color(0xFF48C95A)],
+              colors: [
+                Color(0xFF8AFF8A),
+                Color(0xFF48C95A),
+              ],
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.45),
+                color: colorScheme.primary.withValues(alpha: 0.45),
                 blurRadius: 34,
                 spreadRadius: 4,
               ),
@@ -40,7 +47,7 @@ class PlayButton extends StatelessWidget {
           ),
           child: Icon(
             isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
-            color: AppColors.tertiary,
+            color: colorScheme.onPrimary,
             size: 42,
           ),
         ),

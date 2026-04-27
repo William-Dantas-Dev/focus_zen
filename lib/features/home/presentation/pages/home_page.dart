@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../application/timer_controller.dart';
 import '../../data/models/timer_preset_option.dart';
-import '../widgets/bottom_nav.dart';
 import '../widgets/controls.dart';
 import '../widgets/home_header.dart';
 import '../widgets/mode_chip.dart';
@@ -19,8 +17,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  int currentIndex = 0;
-
   void _openPresetBottomSheet(TimerPresetOption selectedPreset) {
     showModalBottomSheet(
       context: context,
@@ -43,13 +39,18 @@ class _HomePageState extends ConsumerState<HomePage> {
     final timer = ref.watch(timerControllerProvider);
     final controller = ref.read(timerControllerProvider.notifier);
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: RadialGradient(
             center: Alignment.topCenter,
             radius: 1.2,
-            colors: [Color(0xFF162014), AppColors.darkBackground],
+            colors: [
+              colorScheme.surface,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
           ),
         ),
         child: SafeArea(
@@ -85,18 +86,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                   onReset: controller.reset,
                   onSkip: controller.skip,
                 ),
+
                 const Spacer(),
-
-                BottomNav(
-                  currentIndex: currentIndex,
-                  onItemSelected: (index) {
-                    setState(() {
-                      currentIndex = index;
-                    });
-                  },
-                ),
-
-                const SizedBox(height: 24),
               ],
             ),
           ),

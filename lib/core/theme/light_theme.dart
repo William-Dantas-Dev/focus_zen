@@ -4,6 +4,8 @@ import 'app_colors.dart';
 
 class LightTheme {
   static ThemeData get theme {
+    const lightPrimary = Color(0xFF2E9E4F); // verde mais suave
+
     return ThemeData(
       brightness: Brightness.light,
       useMaterial3: true,
@@ -11,12 +13,12 @@ class LightTheme {
       scaffoldBackgroundColor: AppColors.lightBackground,
 
       colorScheme: const ColorScheme.light(
-        primary: AppColors.primary,
+        primary: lightPrimary,
         secondary: AppColors.secondary,
         tertiary: AppColors.tertiary,
         surface: AppColors.lightSurface,
         error: AppColors.error,
-        onPrimary: AppColors.tertiary,
+        onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: AppColors.lightTextPrimary,
         onError: Colors.white,
@@ -62,13 +64,25 @@ class LightTheme {
 
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.tertiary,
+          backgroundColor: lightPrimary,
+          foregroundColor: Colors.white,
           minimumSize: const Size(64, 64),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(999),
           ),
-          elevation: 6,
+          elevation: 4,
+        ),
+      ),
+
+      iconTheme: const IconThemeData(
+        color: AppColors.lightTextSecondary,
+        size: 24,
+      ),
+
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          foregroundColor: AppColors.lightTextSecondary,
+          highlightColor: lightPrimary.withValues(alpha: 0.1),
         ),
       ),
 

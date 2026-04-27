@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
-
 class BottomNavItem extends StatelessWidget {
   const BottomNavItem({
     super.key,
@@ -16,14 +14,16 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: Colors.transparent,
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
-        splashColor: AppColors.primary.withValues(alpha: 0.12),
-        highlightColor: AppColors.primary.withValues(alpha: 0.08),
+        splashColor: colorScheme.primary.withValues(alpha: 0.12),
+        highlightColor: colorScheme.primary.withValues(alpha: 0.08),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOut,
@@ -32,12 +32,12 @@ class BottomNavItem extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isActive
-                ? AppColors.primary.withValues(alpha: 0.16)
+                ? colorScheme.primary.withValues(alpha: 0.16)
                 : Colors.transparent,
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       blurRadius: 20,
                     ),
                   ]
@@ -46,7 +46,9 @@ class BottomNavItem extends StatelessWidget {
           child: Icon(
             icon,
             size: 22,
-            color: isActive ? AppColors.primary : AppColors.textMuted,
+            color: isActive
+                ? colorScheme.primary
+                : colorScheme.onSurface.withValues(alpha: 0.45),
           ),
         ),
       ),
