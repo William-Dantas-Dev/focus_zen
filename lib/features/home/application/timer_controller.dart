@@ -183,7 +183,7 @@ class TimerController extends Notifier<TimerState> {
   void skip() {
     _timer?.cancel();
     _endTime = null;
-    _goToNextMode();
+    _goToNextMode(playFeedback: false);
   }
 
   Future<void> selectPreset(TimerPresetOption preset) async {
@@ -208,7 +208,7 @@ class TimerController extends Notifier<TimerState> {
     await _saveSession();
   }
 
-  void _goToNextMode() {
+  void _goToNextMode({bool playFeedback = true}) {
     final nextMode = _nextMode();
     final nextSession = _nextSession(nextMode);
 
@@ -220,7 +220,9 @@ class TimerController extends Notifier<TimerState> {
     _timer?.cancel();
     _endTime = null;
 
-    _playSessionFeedback();
+    if (playFeedback) {
+      _playSessionFeedback();
+    }
 
     state = state.copyWith(
       mode: nextMode,

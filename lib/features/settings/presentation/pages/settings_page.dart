@@ -71,24 +71,24 @@ class SettingsPage extends ConsumerWidget {
                     onChanged: settingsController.setAutoStartBreak,
                   ),
                 ),
-                const SettingsTile(
-                  icon: Icons.tune_rounded,
-                  title: 'Presets',
-                  subtitle: 'Pomodoro',
-                  trailing: Icon(
-                    Icons.chevron_right_rounded,
-                    color: AppColors.textMuted,
-                  ),
-                ),
-                const SettingsTile(
-                  icon: Icons.edit_rounded,
-                  title: 'Custom duration',
-                  subtitle: '45 min',
-                  trailing: Icon(
-                    Icons.chevron_right_rounded,
-                    color: AppColors.textMuted,
-                  ),
-                ),
+                // const SettingsTile(
+                //   icon: Icons.tune_rounded,
+                //   title: 'Presets',
+                //   subtitle: 'Pomodoro',
+                //   trailing: Icon(
+                //     Icons.chevron_right_rounded,
+                //     color: AppColors.textMuted,
+                //   ),
+                // ),
+                // const SettingsTile(
+                //   icon: Icons.edit_rounded,
+                //   title: 'Custom duration',
+                //   subtitle: '45 min',
+                //   trailing: Icon(
+                //     Icons.chevron_right_rounded,
+                //     color: AppColors.textMuted,
+                //   ),
+                // ),
               ],
             ),
 
