@@ -38,10 +38,19 @@ class TimerCircle extends StatelessWidget {
               ],
             ),
           ),
-          CustomPaint(
-            size: const Size(260, 260),
-            painter: TimerProgressPainter(progress: progress),
+
+          TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: 0, end: progress),
+            duration: const Duration(milliseconds: 950),
+            curve: Curves.linear,
+            builder: (context, animatedProgress, child) {
+              return CustomPaint(
+                size: const Size(260, 260),
+                painter: TimerProgressPainter(progress: progress),
+              );
+            },
           ),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

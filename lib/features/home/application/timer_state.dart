@@ -5,22 +5,26 @@ class TimerState {
   const TimerState({
     required this.selectedPreset,
     required this.mode,
-    required this.remainingSeconds,
-    required this.totalSeconds,
+    required this.remainingMilliseconds,
+    required this.totalMilliseconds,
     required this.currentSession,
     required this.isRunning,
   });
 
   final TimerPresetOption selectedPreset;
   final PomodoroMode mode;
-  final int remainingSeconds;
-  final int totalSeconds;
+  final int remainingMilliseconds;
+  final int totalMilliseconds;
   final int currentSession;
   final bool isRunning;
 
+  int get remainingSeconds => (remainingMilliseconds / 1000).ceil();
+
   double get progress {
-    if (totalSeconds == 0) return 0;
-    return 1 - (remainingSeconds / totalSeconds);
+    if (totalMilliseconds == 0) return 0;
+
+    final value = 1 - (remainingMilliseconds / totalMilliseconds);
+    return value.clamp(0.0, 1.0);
   }
 
   String get formattedTime {
@@ -38,16 +42,17 @@ class TimerState {
   TimerState copyWith({
     TimerPresetOption? selectedPreset,
     PomodoroMode? mode,
-    int? remainingSeconds,
-    int? totalSeconds,
+    int? remainingMilliseconds,
+    int? totalMilliseconds,
     int? currentSession,
     bool? isRunning,
   }) {
     return TimerState(
       selectedPreset: selectedPreset ?? this.selectedPreset,
       mode: mode ?? this.mode,
-      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
-      totalSeconds: totalSeconds ?? this.totalSeconds,
+      remainingMilliseconds:
+          remainingMilliseconds ?? this.remainingMilliseconds,
+      totalMilliseconds: totalMilliseconds ?? this.totalMilliseconds,
       currentSession: currentSession ?? this.currentSession,
       isRunning: isRunning ?? this.isRunning,
     );
