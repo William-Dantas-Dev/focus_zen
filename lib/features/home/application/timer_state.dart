@@ -1,5 +1,5 @@
+import '../data/models/pomodoro_mode.dart';
 import '../data/models/timer_preset_option.dart';
-import '../presentation/widgets/mode_chip.dart';
 
 class TimerState {
   const TimerState({

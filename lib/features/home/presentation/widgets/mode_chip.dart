@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-
-enum PomodoroMode { focus, shortBreak, longBreak }
+import '../../data/models/pomodoro_mode.dart';
 
 class ModeChip extends StatelessWidget {
   const ModeChip({super.key, required this.mode});
 
   final PomodoroMode mode;
-
-  String get label {
-    switch (mode) {
-      case PomodoroMode.focus:
-        return 'FOCUS';
-      case PomodoroMode.shortBreak:
-        return 'SHORT BREAK';
-      case PomodoroMode.longBreak:
-        return 'LONG BREAK';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +42,7 @@ class ModeChip extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            label,
+            mode.label,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: AppColors.textSecondary,
               letterSpacing: 2,

@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/models/timer_preset_option.dart';
-import '../data/repositories/timer_preset_repository.dart';
-import '../presentation/widgets/mode_chip.dart';
-import 'timer_state.dart';
 import '../../../core/providers/audio_provider.dart';
 import '../../../core/providers/feedback_provider.dart';
+import '../data/models/pomodoro_mode.dart';
+import '../data/models/timer_preset_option.dart';
+import '../data/repositories/timer_preset_repository.dart';
+import '../data/repositories/timer_session_repository.dart';
+import 'timer_state.dart';
 
 final timerControllerProvider = NotifierProvider<TimerController, TimerState>(
   TimerController.new,
@@ -28,7 +29,7 @@ class TimerController extends Notifier<TimerState> {
     final preset = timerPresetOptions.first;
     final totalMilliseconds = preset.focusMinutes * 60 * 1000;
 
-    _loadSavedPreset();
+    _loadSavedSession();
 
     return TimerState(
       selectedPreset: preset,
@@ -37,6 +38,61 @@ class TimerController extends Notifier<TimerState> {
       totalMilliseconds: totalMilliseconds,
       currentSession: 1,
       isRunning: false,
+    );
+  }
+
+  Future<void> _loadSavedSession() async {
+    final session = await ref.read(timerSessionRepositoryProvider).getSession();
+
+    if (session == null) {
+      await _loadSavedPreset();
+      return;
+    }
+
+    final preset = timerPresetOptions.firstWhere(
+      (preset) => preset.id == session.presetId,
+      orElse: () => timerPresetOptions.first,
+    );
+
+    var remainingMilliseconds = session.remainingMilliseconds;
+    var isRunning = session.isRunning;
+
+    if (session.isRunning && session.endTime != null) {
+      final remainingFromEndTime = session.endTime!
+          .difference(DateTime.now())
+          .inMilliseconds;
+
+      if (remainingFromEndTime <= 0) {
+        state = TimerState(
+          selectedPreset: preset,
+          mode: session.mode,
+          remainingMilliseconds: 0,
+          totalMilliseconds: session.totalMilliseconds,
+          currentSession: session.currentSession,
+          isRunning: false,
+        );
+
+        _goToNextMode();
+        return;
+      }
+
+      remainingMilliseconds = remainingFromEndTime;
+      isRunning = true;
+      _endTime = session.endTime;
+
+      _timer?.cancel();
+      _timer = Timer.periodic(_tickDuration, (_) {
+        _tick();
+      });
+    }
+
+    state = TimerState(
+      selectedPreset: preset,
+      mode: session.mode,
+      remainingMilliseconds: remainingMilliseconds,
+      totalMilliseconds: session.totalMilliseconds,
+      currentSession: session.currentSession,
+      isRunning: isRunning,
     );
   }
 
@@ -55,6 +111,8 @@ class TimerController extends Notifier<TimerState> {
       currentSession: 1,
       isRunning: false,
     );
+
+    await _saveSession();
   }
 
   void toggle() {
@@ -76,11 +134,11 @@ class TimerController extends Notifier<TimerState> {
     });
 
     _tick();
+    _saveSession();
   }
 
   void _tick() {
     final endTime = _endTime;
-
     if (endTime == null) return;
 
     final remaining = endTime.difference(DateTime.now()).inMilliseconds;
@@ -91,6 +149,8 @@ class TimerController extends Notifier<TimerState> {
     }
 
     state = state.copyWith(remainingMilliseconds: remaining);
+
+    _saveSession();
   }
 
   void pause() {
@@ -98,6 +158,7 @@ class TimerController extends Notifier<TimerState> {
     _endTime = null;
 
     state = state.copyWith(isRunning: false);
+    _saveSession();
   }
 
   void reset() {
@@ -114,6 +175,8 @@ class TimerController extends Notifier<TimerState> {
       totalMilliseconds: totalMilliseconds,
       isRunning: false,
     );
+
+    _saveSession();
   }
 
   void skip() {
@@ -140,6 +203,8 @@ class TimerController extends Notifier<TimerState> {
       currentSession: 1,
       isRunning: false,
     );
+
+    await _saveSession();
   }
 
   void _goToNextMode() {
@@ -163,6 +228,22 @@ class TimerController extends Notifier<TimerState> {
       currentSession: nextSession,
       isRunning: false,
     );
+
+    _saveSession();
+  }
+
+  Future<void> _saveSession() async {
+    await ref
+        .read(timerSessionRepositoryProvider)
+        .saveSession(
+          presetId: state.selectedPreset.id,
+          mode: state.mode,
+          remainingMilliseconds: state.remainingMilliseconds,
+          totalMilliseconds: state.totalMilliseconds,
+          currentSession: state.currentSession,
+          isRunning: state.isRunning,
+          endTime: _endTime,
+        );
   }
 
   PomodoroMode _nextMode() {
@@ -181,12 +262,7 @@ class TimerController extends Notifier<TimerState> {
   int _nextSession(PomodoroMode nextMode) {
     if (state.mode != PomodoroMode.focus && nextMode == PomodoroMode.focus) {
       final nextSession = state.currentSession + 1;
-
-      if (nextSession > state.selectedPreset.cycles) {
-        return 1;
-      }
-
-      return nextSession;
+      return nextSession > state.selectedPreset.cycles ? 1 : nextSession;
     }
 
     return state.currentSession;
