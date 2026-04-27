@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers/audio_provider.dart';
 import '../../../core/providers/feedback_provider.dart';
+import '../../settings/application/settings_controller.dart';
 import '../data/models/pomodoro_mode.dart';
 import '../data/models/timer_preset_option.dart';
 import '../data/repositories/timer_preset_repository.dart';
@@ -230,6 +231,16 @@ class TimerController extends Notifier<TimerState> {
     );
 
     _saveSession();
+
+    final settings = ref.read(settingsControllerProvider);
+
+    final shouldAutoStart =
+        (nextMode == PomodoroMode.focus && settings.autoStartFocus) ||
+        (nextMode != PomodoroMode.focus && settings.autoStartBreak);
+
+    if (shouldAutoStart) {
+      start();
+    }
   }
 
   Future<void> _saveSession() async {
@@ -280,7 +291,14 @@ class TimerController extends Notifier<TimerState> {
   }
 
   Future<void> _playSessionFeedback() async {
-    await ref.read(feedbackServiceProvider).vibrate();
-    await ref.read(audioServiceProvider).playBeep();
+    final settings = ref.read(settingsControllerProvider);
+
+    if (settings.hapticVibration) {
+      await ref.read(feedbackServiceProvider).vibrate();
+    }
+
+    if (settings.soundEffects) {
+      await ref.read(audioServiceProvider).playBeep();
+    }
   }
 }
