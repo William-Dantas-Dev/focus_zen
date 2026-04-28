@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/audio_provider.dart';
 import '../../../core/providers/feedback_provider.dart';
 import '../../settings/application/settings_controller.dart';
+import '../../stats/application/stats_controller.dart';
+import '../../stats/data/models/focus_session.dart';
+import '../../stats/data/repositories/stats_repository.dart';
 import '../data/models/pomodoro_mode.dart';
 import '../data/models/timer_preset_option.dart';
 import '../data/repositories/timer_preset_repository.dart';
@@ -149,9 +152,12 @@ class TimerController extends Notifier<TimerState> {
       return;
     }
 
-    state = state.copyWith(remainingMilliseconds: remaining);
+    state = state.copyWith(
+      remainingMilliseconds: remaining,
+    );
 
-    _saveSession();
+    // Não salve aqui. Isso roda a cada 100ms.
+    // O endTime já foi salvo no start(), então o app consegue restaurar o timer.
   }
 
   void pause() {
@@ -183,7 +189,11 @@ class TimerController extends Notifier<TimerState> {
   void skip() {
     _timer?.cancel();
     _endTime = null;
-    _goToNextMode(playFeedback: false);
+
+    _goToNextMode(
+      playFeedback: false,
+      saveFocusSession: false,
+    );
   }
 
   Future<void> selectPreset(TimerPresetOption preset) async {
@@ -208,7 +218,16 @@ class TimerController extends Notifier<TimerState> {
     await _saveSession();
   }
 
-  void _goToNextMode({bool playFeedback = true}) {
+  void _goToNextMode({
+    bool playFeedback = true,
+    bool saveFocusSession = true,
+  }) {
+    final previousMode = state.mode;
+
+    if (saveFocusSession && previousMode == PomodoroMode.focus) {
+      _saveCompletedFocusSession();
+    }
+
     final nextMode = _nextMode();
     final nextSession = _nextSession(nextMode);
 
@@ -245,10 +264,26 @@ class TimerController extends Notifier<TimerState> {
     }
   }
 
+  Future<void> _saveCompletedFocusSession() async {
+    final now = DateTime.now();
+
+    final session = FocusSession(
+      id: now.toIso8601String(),
+      startedAt: now.subtract(
+        Duration(milliseconds: state.totalMilliseconds),
+      ),
+      endedAt: now,
+      durationMinutes: (state.totalMilliseconds / 60000).round(),
+      presetName: state.selectedPreset.name,
+    );
+
+    await ref.read(statsRepositoryProvider).saveSession(session);
+
+    ref.invalidate(statsControllerProvider);
+  }
+
   Future<void> _saveSession() async {
-    await ref
-        .read(timerSessionRepositoryProvider)
-        .saveSession(
+    await ref.read(timerSessionRepositoryProvider).saveSession(
           presetId: state.selectedPreset.id,
           mode: state.mode,
           remainingMilliseconds: state.remainingMilliseconds,

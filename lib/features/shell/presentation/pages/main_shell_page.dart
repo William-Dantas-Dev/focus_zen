@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../../../home/presentation/pages/home_page.dart';
 import '../../../settings/presentation/pages/settings_page.dart';
+import '../../../stats/presentation/pages/stats_page.dart';
 import '../widgets/bottom_nav.dart';
 
 class MainShellPage extends StatefulWidget {
@@ -44,7 +44,7 @@ class _MainShellPageState extends State<MainShellPage> {
                   index: currentIndex,
                   children: const [
                     HomePage(),
-                    SizedBox(),
+                    StatsPage(),
                     SettingsPage(),
                   ],
                 ),
