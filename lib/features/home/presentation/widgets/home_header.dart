@@ -19,10 +19,7 @@ class HomeHeader extends StatelessWidget {
 
     return Row(
       children: [
-        HeaderIconButton(
-          icon: Icons.menu_rounded,
-          onTap: onMenuTap,
-        ),
+        SizedBox(width: 42, height: 42),
         const Spacer(),
         Text(
           'FOCUSZEN',
@@ -33,10 +30,7 @@ class HomeHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        HeaderIconButton(
-          icon: Icons.tune_rounded,
-          onTap: onSettingsTap,
-        ),
+        HeaderIconButton(icon: Icons.tune_rounded, onTap: onSettingsTap),
       ],
     );
   }

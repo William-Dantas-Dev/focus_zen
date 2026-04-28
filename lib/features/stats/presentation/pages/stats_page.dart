@@ -42,7 +42,7 @@ class StatsPage extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
-          const EfficiencyRatioCard(), // ainda pode ser mock por enquanto
+          const EfficiencyRatioCard(),
 
           const SizedBox(height: 24),
 

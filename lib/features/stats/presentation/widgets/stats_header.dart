@@ -5,30 +5,24 @@ class StatsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          Icons.menu_rounded,
-          color: colorScheme.onSurface.withValues(alpha: 0.65),
-        ),
-        const SizedBox(width: 16),
         Text(
-          'Focus Zen',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w800,
-              ),
+          'Your Focus',
+          style: textTheme.headlineMedium?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w800,
+          ),
         ),
-        const Spacer(),
-        CircleAvatar(
-          radius: 16,
-          backgroundColor: colorScheme.primary,
-          child: Icon(
-            Icons.person_rounded,
-            size: 18,
-            color: colorScheme.onPrimary,
+        const SizedBox(height: 6),
+        Text(
+          'Track your progress and stay consistent.',
+          style: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
       ],

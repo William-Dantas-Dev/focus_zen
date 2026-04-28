@@ -5,11 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/audio_provider.dart';
 import '../../../core/providers/feedback_provider.dart';
 import '../../settings/application/settings_controller.dart';
-import '../../stats/application/stats_controller.dart';
-import '../../stats/data/models/focus_session.dart';
-import '../../stats/data/repositories/stats_repository.dart';
 import '../data/models/pomodoro_mode.dart';
+import '../data/models/timer_history_entry.dart';
 import '../data/models/timer_preset_option.dart';
+import '../data/repositories/timer_history_repository.dart';
 import '../data/repositories/timer_preset_repository.dart';
 import '../data/repositories/timer_session_repository.dart';
 import 'timer_state.dart';
@@ -76,7 +75,7 @@ class TimerController extends Notifier<TimerState> {
           isRunning: false,
         );
 
-        _goToNextMode();
+        _goToNextMode(playFeedback: true, saveHistory: true);
         return;
       }
 
@@ -85,9 +84,7 @@ class TimerController extends Notifier<TimerState> {
       _endTime = session.endTime;
 
       _timer?.cancel();
-      _timer = Timer.periodic(_tickDuration, (_) {
-        _tick();
-      });
+      _timer = Timer.periodic(_tickDuration, (_) => _tick());
     }
 
     state = TimerState(
@@ -133,31 +130,10 @@ class TimerController extends Notifier<TimerState> {
     state = state.copyWith(isRunning: true);
 
     _timer?.cancel();
-    _timer = Timer.periodic(_tickDuration, (_) {
-      _tick();
-    });
+    _timer = Timer.periodic(_tickDuration, (_) => _tick());
 
     _tick();
     _saveSession();
-  }
-
-  void _tick() {
-    final endTime = _endTime;
-    if (endTime == null) return;
-
-    final remaining = endTime.difference(DateTime.now()).inMilliseconds;
-
-    if (remaining <= 0) {
-      _goToNextMode();
-      return;
-    }
-
-    state = state.copyWith(
-      remainingMilliseconds: remaining,
-    );
-
-    // Não salve aqui. Isso roda a cada 100ms.
-    // O endTime já foi salvo no start(), então o app consegue restaurar o timer.
   }
 
   void pause() {
@@ -190,10 +166,7 @@ class TimerController extends Notifier<TimerState> {
     _timer?.cancel();
     _endTime = null;
 
-    _goToNextMode(
-      playFeedback: false,
-      saveFocusSession: false,
-    );
+    _goToNextMode(playFeedback: false, saveHistory: true);
   }
 
   Future<void> selectPreset(TimerPresetOption preset) async {
@@ -218,14 +191,24 @@ class TimerController extends Notifier<TimerState> {
     await _saveSession();
   }
 
-  void _goToNextMode({
-    bool playFeedback = true,
-    bool saveFocusSession = true,
-  }) {
-    final previousMode = state.mode;
+  void _tick() {
+    final endTime = _endTime;
+    if (endTime == null) return;
 
-    if (saveFocusSession && previousMode == PomodoroMode.focus) {
-      _saveCompletedFocusSession();
+    final remaining = endTime.difference(DateTime.now()).inMilliseconds;
+
+    if (remaining <= 0) {
+      _goToNextMode(playFeedback: true, saveHistory: true);
+      return;
+    }
+
+    state = state.copyWith(remainingMilliseconds: remaining);
+    _saveSession();
+  }
+
+  void _goToNextMode({bool playFeedback = true, bool saveHistory = true}) {
+    if (saveHistory) {
+      _saveCompletedTimeForCurrentMode(wasCompleted: playFeedback);
     }
 
     final nextMode = _nextMode();
@@ -264,26 +247,10 @@ class TimerController extends Notifier<TimerState> {
     }
   }
 
-  Future<void> _saveCompletedFocusSession() async {
-    final now = DateTime.now();
-
-    final session = FocusSession(
-      id: now.toIso8601String(),
-      startedAt: now.subtract(
-        Duration(milliseconds: state.totalMilliseconds),
-      ),
-      endedAt: now,
-      durationMinutes: (state.totalMilliseconds / 60000).round(),
-      presetName: state.selectedPreset.name,
-    );
-
-    await ref.read(statsRepositoryProvider).saveSession(session);
-
-    ref.invalidate(statsControllerProvider);
-  }
-
   Future<void> _saveSession() async {
-    await ref.read(timerSessionRepositoryProvider).saveSession(
+    await ref
+        .read(timerSessionRepositoryProvider)
+        .saveSession(
           presetId: state.selectedPreset.id,
           mode: state.mode,
           remainingMilliseconds: state.remainingMilliseconds,
@@ -291,6 +258,28 @@ class TimerController extends Notifier<TimerState> {
           currentSession: state.currentSession,
           isRunning: state.isRunning,
           endTime: _endTime,
+        );
+  }
+
+  Future<void> _saveCompletedTimeForCurrentMode({
+    required bool wasCompleted,
+  }) async {
+    final completedMilliseconds =
+        state.totalMilliseconds - state.remainingMilliseconds;
+
+    if (completedMilliseconds <= 0) return;
+
+    await ref
+        .read(timerHistoryRepositoryProvider)
+        .addEntry(
+          TimerHistoryEntry(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            presetId: state.selectedPreset.id,
+            mode: state.mode,
+            durationMilliseconds: completedMilliseconds,
+            completedAt: DateTime.now(),
+            wasCompleted: wasCompleted,
+          ),
         );
   }
 

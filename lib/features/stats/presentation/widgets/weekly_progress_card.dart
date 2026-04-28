@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WeeklyProgressCard extends StatelessWidget {
-  const WeeklyProgressCard({
-    super.key,
-    required this.weeklyFocusMinutes,
-  });
+  const WeeklyProgressCard({super.key, required this.weeklyFocusMinutes});
 
   final List<int> weeklyFocusMinutes;
 
@@ -21,7 +18,8 @@ class WeeklyProgressCard extends StatelessWidget {
 
     final averageMinutes = weeklyFocusMinutes.isEmpty
         ? 0
-        : weeklyFocusMinutes.reduce((a, b) => a + b) ~/ weeklyFocusMinutes.length;
+        : weeklyFocusMinutes.reduce((a, b) => a + b) ~/
+              weeklyFocusMinutes.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,23 +29,23 @@ class WeeklyProgressCard extends StatelessWidget {
             Text(
               'Weekly Progress',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w800,
-                  ),
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             const Spacer(),
             Text(
               'This Week',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha: 0.45),
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: colorScheme.onSurface.withValues(alpha: 0.45),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 14),
         Container(
-          height: 150,
+          height: 165,
           padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
           decoration: BoxDecoration(
             color: isDark
@@ -69,7 +67,12 @@ class WeeklyProgressCard extends StatelessWidget {
                         : 0;
 
                     final value = maxMinutes == 0 ? 0.0 : minutes / maxMinutes;
+
                     final isActive = index == DateTime.now().weekday - 1;
+
+                    final barHeight = minutes == 0
+                        ? 4.0
+                        : 64 * value.clamp(0.12, 1.0);
 
                     return Expanded(
                       child: Column(
@@ -77,22 +80,27 @@ class WeeklyProgressCard extends StatelessWidget {
                         children: [
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
-                            height: 70 * value.clamp(0.08, 1.0),
+                            height: barHeight,
                             width: 8,
                             decoration: BoxDecoration(
                               color: isActive
                                   ? colorScheme.primary
-                                  : colorScheme.onSurface.withValues(alpha: 0.14),
+                                  : colorScheme.onSurface.withValues(
+                                      alpha: 0.14,
+                                    ),
                               borderRadius: BorderRadius.circular(999),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Text(
                             days[index],
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
                                   color: isActive
                                       ? colorScheme.primary
-                                      : colorScheme.onSurface.withValues(alpha: 0.45),
+                                      : colorScheme.onSurface.withValues(
+                                          alpha: 0.45,
+                                        ),
                                   fontWeight: FontWeight.w700,
                                 ),
                           ),
@@ -108,16 +116,16 @@ class WeeklyProgressCard extends StatelessWidget {
                   Text(
                     'Mon - Sun',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withValues(alpha: 0.45),
-                        ),
+                      color: colorScheme.onSurface.withValues(alpha: 0.45),
+                    ),
                   ),
                   const Spacer(),
                   Text(
                     'Avg. ${_formatMinutes(averageMinutes)}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),

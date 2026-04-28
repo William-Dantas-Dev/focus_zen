@@ -49,7 +49,7 @@ class _MainShellPageState extends State<MainShellPage> {
                   ],
                 ),
               ),
-
+              const SizedBox(height: 2),
               BottomNav(
                 currentIndex: currentIndex,
                 onItemSelected: _selectTab,
