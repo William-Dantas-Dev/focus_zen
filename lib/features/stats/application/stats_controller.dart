@@ -1,11 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/models/focus_session.dart';
-import '../data/repositories/stats_repository.dart';
+import '../../home/data/models/pomodoro_mode.dart';
+import '../../home/data/models/timer_history_entry.dart';
+import '../../home/data/repositories/timer_history_repository.dart';
 import 'stats_state.dart';
 
-final statsControllerProvider =
-    NotifierProvider<StatsController, StatsState>(StatsController.new);
+final statsControllerProvider = NotifierProvider<StatsController, StatsState>(
+  StatsController.new,
+);
 
 class StatsController extends Notifier<StatsState> {
   @override
@@ -19,40 +21,39 @@ class StatsController extends Notifier<StatsState> {
   }
 
   Future<void> _loadStats() async {
-    final sessions = await ref.read(statsRepositoryProvider).getSessions();
+    final entries = await ref.read(timerHistoryRepositoryProvider).getEntries();
 
-    sessions.sort((a, b) => b.endedAt.compareTo(a.endedAt));
+    final focusEntries =
+        entries.where((entry) => entry.mode == PomodoroMode.focus).toList()
+          ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
 
     state = StatsState(
-      todayFocusMinutes: _todayFocusMinutes(sessions),
-      todaySessions: _todaySessions(sessions),
-      weeklyFocusMinutes: _weeklyFocusMinutes(sessions),
-      currentStreak: _currentStreak(sessions),
-      bestStreak: _bestStreak(sessions),
-      recentSessions: sessions.take(5).toList(),
+      todayFocusMinutes: _todayFocusMinutes(focusEntries),
+      todaySessions: _todaySessions(focusEntries),
+      weeklyFocusMinutes: _weeklyFocusMinutes(focusEntries),
+      currentStreak: _currentStreak(focusEntries),
+      bestStreak: _bestStreak(focusEntries),
+      recentSessions: focusEntries.take(5).toList(),
     );
   }
 
-  int _todayFocusMinutes(List<FocusSession> sessions) {
+  int _todayFocusMinutes(List<TimerHistoryEntry> entries) {
     final now = DateTime.now();
 
-    return sessions
-        .where((session) => _isSameDay(session.endedAt, now))
-        .fold<int>(
-          0,
-          (total, session) => total + session.durationMinutes,
-        );
+    return entries
+        .where((entry) => _isSameDay(entry.completedAt, now))
+        .fold<int>(0, (total, entry) => total + entry.durationMinutes);
   }
 
-  int _todaySessions(List<FocusSession> sessions) {
+  int _todaySessions(List<TimerHistoryEntry> entries) {
     final now = DateTime.now();
 
-    return sessions.where((session) {
-      return _isSameDay(session.endedAt, now);
+    return entries.where((entry) {
+      return _isSameDay(entry.completedAt, now);
     }).length;
   }
 
-  List<int> _weeklyFocusMinutes(List<FocusSession> sessions) {
+  List<int> _weeklyFocusMinutes(List<TimerHistoryEntry> entries) {
     final now = DateTime.now();
     final startOfWeek = DateTime(
       now.year,
@@ -62,25 +63,20 @@ class StatsController extends Notifier<StatsState> {
 
     final values = List<int>.filled(7, 0);
 
-    for (final session in sessions) {
-      final sessionDay = DateTime(
-        session.endedAt.year,
-        session.endedAt.month,
-        session.endedAt.day,
-      );
-
-      final diff = sessionDay.difference(startOfWeek).inDays;
+    for (final entry in entries) {
+      final entryDay = _dateOnly(entry.completedAt);
+      final diff = entryDay.difference(startOfWeek).inDays;
 
       if (diff >= 0 && diff < 7) {
-        values[diff] += session.durationMinutes;
+        values[diff] += entry.durationMinutes;
       }
     }
 
     return values;
   }
 
-  int _currentStreak(List<FocusSession> sessions) {
-    final activeDays = _activeDays(sessions);
+  int _currentStreak(List<TimerHistoryEntry> entries) {
+    final activeDays = _activeDays(entries);
 
     if (activeDays.isEmpty) return 0;
 
@@ -95,8 +91,8 @@ class StatsController extends Notifier<StatsState> {
     return streak;
   }
 
-  int _bestStreak(List<FocusSession> sessions) {
-    final days = _activeDays(sessions).toList()..sort();
+  int _bestStreak(List<TimerHistoryEntry> entries) {
+    final days = _activeDays(entries).toList()..sort();
 
     if (days.isEmpty) return 0;
 
@@ -120,8 +116,8 @@ class StatsController extends Notifier<StatsState> {
     return best;
   }
 
-  Set<DateTime> _activeDays(List<FocusSession> sessions) {
-    return sessions.map((session) => _dateOnly(session.endedAt)).toSet();
+  Set<DateTime> _activeDays(List<TimerHistoryEntry> entries) {
+    return entries.map((entry) => _dateOnly(entry.completedAt)).toSet();
   }
 
   DateTime _dateOnly(DateTime date) {

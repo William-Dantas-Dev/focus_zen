@@ -1,4 +1,4 @@
-import '../data/models/focus_session.dart';
+import '../../home/data/models/timer_history_entry.dart';
 
 class StatsState {
   const StatsState({
@@ -15,7 +15,7 @@ class StatsState {
   final List<int> weeklyFocusMinutes;
   final int currentStreak;
   final int bestStreak;
-  final List<FocusSession> recentSessions;
+  final List<TimerHistoryEntry> recentSessions;
 
   factory StatsState.initial() {
     return const StatsState(

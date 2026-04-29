@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/focus_session.dart';
+import '../../../home/data/models/timer_history_entry.dart';
 
 class RecentActivityList extends StatelessWidget {
-  const RecentActivityList({
-    super.key,
-    required this.sessions,
-  });
+  const RecentActivityList({super.key, required this.sessions});
 
-  final List<FocusSession> sessions;
+  final List<TimerHistoryEntry> sessions;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +37,8 @@ class _EmptyState extends StatelessWidget {
     return Text(
       'No sessions yet. Start focusing!',
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-          ),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+      ),
     );
   }
 }
@@ -54,19 +51,17 @@ class _RecentActivityTitle extends StatelessWidget {
     return Text(
       'Recent Activity',
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.w800,
-          ),
+        color: Theme.of(context).colorScheme.onSurface,
+        fontWeight: FontWeight.w800,
+      ),
     );
   }
 }
 
 class _RecentActivityItem extends StatelessWidget {
-  const _RecentActivityItem({
-    required this.session,
-  });
+  const _RecentActivityItem({required this.session});
 
-  final FocusSession session;
+  final TimerHistoryEntry session;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +89,9 @@ class _RecentActivityItem extends StatelessWidget {
               color: colorScheme.primary.withValues(alpha: 0.12),
             ),
             child: Icon(
-              Icons.timer_rounded,
+              session.wasCompleted
+                  ? Icons.check_rounded
+                  : Icons.skip_next_rounded,
               color: colorScheme.primary,
               size: 18,
             ),
@@ -106,18 +103,18 @@ class _RecentActivityItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  session.presetName,
+                  session.mode.label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w800,
-                      ),
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  _formatDate(session.endedAt),
+                  _formatDate(session.completedAt),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.45),
-                      ),
+                    color: colorScheme.onSurface.withValues(alpha: 0.45),
+                  ),
                 ),
               ],
             ),
@@ -129,17 +126,17 @@ class _RecentActivityItem extends StatelessWidget {
               Text(
                 '${session.durationMinutes}m',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
-                'Completed',
+                session.wasCompleted ? 'Completed' : 'Skipped',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurface.withValues(alpha: 0.5),
-                      fontSize: 10,
-                    ),
+                  color: colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontSize: 10,
+                ),
               ),
             ],
           ),
