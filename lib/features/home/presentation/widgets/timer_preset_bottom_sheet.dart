@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/timer_preset_option.dart';
 import 'preset_tile.dart';
 
@@ -15,6 +16,7 @@ class TimerPresetBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -54,13 +56,11 @@ class TimerPresetBottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
-
               const SizedBox(height: 22),
-
               Row(
                 children: [
                   Text(
-                    'Choose timer',
+                    l10n.chooseTimer,
                     style: textTheme.titleMedium?.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
@@ -74,9 +74,9 @@ class TimerPresetBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-
               const SizedBox(height: 12),
 
+              /// 🔥 Aqui está o uso correto
               ...timerPresetOptions.map((preset) {
                 final isSelected = preset.id == selectedPreset.id;
 

@@ -42,7 +42,11 @@ class StatsPage extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
-          const EfficiencyRatioCard(),
+          EfficiencyRatioCard(
+            focusPercentage: stats.focusPercentage,
+            breakPercentage: stats.breakPercentage,
+            progress: stats.focusRatio,
+          ),
 
           const SizedBox(height: 24),
 

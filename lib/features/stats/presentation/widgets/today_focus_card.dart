@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 class TodayFocusCard extends StatelessWidget {
   const TodayFocusCard({
     super.key,
@@ -12,6 +14,7 @@ class TodayFocusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -30,7 +33,7 @@ class TodayFocusCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "TODAY'S FOCUS",
+            l10n.todayFocus.toUpperCase(),
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.5),
               letterSpacing: 2,
@@ -62,7 +65,7 @@ class TodayFocusCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '$sessionsCompleted Sessions Completed',
+                l10n.sessionsCompleted(sessionsCompleted),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurface.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w600,

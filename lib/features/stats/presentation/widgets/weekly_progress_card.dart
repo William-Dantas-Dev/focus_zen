@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 class WeeklyProgressCard extends StatelessWidget {
   const WeeklyProgressCard({super.key, required this.weeklyFocusMinutes});
 
@@ -9,6 +11,7 @@ class WeeklyProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -27,7 +30,7 @@ class WeeklyProgressCard extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Weekly Progress',
+              l10n.weeklyProgress,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.w800,
@@ -35,7 +38,7 @@ class WeeklyProgressCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              'This Week',
+              l10n.thisWeek,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.45),
                 fontWeight: FontWeight.w600,
@@ -67,7 +70,6 @@ class WeeklyProgressCard extends StatelessWidget {
                         : 0;
 
                     final value = maxMinutes == 0 ? 0.0 : minutes / maxMinutes;
-
                     final isActive = index == DateTime.now().weekday - 1;
 
                     final barHeight = minutes == 0
@@ -114,14 +116,14 @@ class WeeklyProgressCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Mon - Sun',
+                    l10n.weekRangeShort,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurface.withValues(alpha: 0.45),
                     ),
                   ),
                   const Spacer(),
                   Text(
-                    'Avg. ${_formatMinutes(averageMinutes)}',
+                    l10n.averageShort(_formatMinutes(averageMinutes, l10n)),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w700,
@@ -136,12 +138,12 @@ class WeeklyProgressCard extends StatelessWidget {
     );
   }
 
-  String _formatMinutes(int minutes) {
+  String _formatMinutes(int minutes, AppLocalizations l10n) {
     final hours = minutes ~/ 60;
     final remainingMinutes = minutes % 60;
 
-    if (hours == 0) return '${remainingMinutes}m';
+    if (hours == 0) return l10n.minutesShort(remainingMinutes);
 
-    return '${hours}h ${remainingMinutes}m';
+    return l10n.hoursMinutesShort(hours, remainingMinutes);
   }
 }

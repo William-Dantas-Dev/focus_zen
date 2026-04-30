@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
-
 class SettingsSectionLabel extends StatelessWidget {
   const SettingsSectionLabel(this.label, {super.key});
 
@@ -9,13 +7,15 @@ class SettingsSectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Text(
-      label,
+      label.toUpperCase(),
       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: AppColors.textMuted,
-            letterSpacing: 2.4,
-            fontWeight: FontWeight.w700,
-          ),
+        color: colorScheme.onSurface.withValues(alpha: 0.45),
+        letterSpacing: 2.2,
+        fontWeight: FontWeight.w700,
+      ),
     );
   }
 }

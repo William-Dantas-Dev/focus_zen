@@ -1,0 +1,124 @@
+{
+  "@@locale": "pt",
+  "appName": "Focus Zen",
+  "@appName": {
+    "description": "App name"
+  },
+  "chooseTimer": "Escolha de Ciclo",
+  "@chooseTimer": {
+    "description": "Título do modal inferior para escolher uma predefinição de timer"
+  },
+  "focus": "Foco",
+  "shortBreak": "Pausa Curta",
+  "longBreak": "Pausa Longa",
+  "recentActivity": "Atividade Recente",
+  "noSessionsYet": "Nenhuma sessão ainda. Comece a focar!",
+  "completed": "Concluída",
+  "skipped": "Pulada",
+  "today": "Hoje",
+  "efficiencyRatio": "Taxa de Eficiência",
+  "focusPercentage": "Foco ({value}%)",
+  "breakPercentage": "Pausa ({value}%)",
+  "efficiencyDescription": "Equilíbrio quase ideal entre foco e descanso.",
+  "weeklyProgress": "Progresso Semanal",
+  "thisWeek": "Esta Semana",
+  "weekRangeShort": "Seg - Dom",
+  "averageShort": "Méd. {value}",
+  "@averageShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesShort": "{value}min",
+  "@minutesShort": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesShort": "{hours}h {minutes}min",
+  "@hoursMinutesShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayFocus": "Foco de Hoje",
+  "sessionsCompleted": "{value} sessões concluídas",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "currentStreak": "Sequência Atual",
+  "daysCount": "{value} dias",
+  "@daysCount": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "bestStreak": "Melhor sequência: {value} dias",
+  "@bestStreak": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "statsHeaderTitle": "Seu Foco",
+  "statsHeaderSubtitle": "Acompanhe seu progresso e mantenha consistência.",
+  "presetQuick": "Foco Rápido",
+  "presetClassic": "Clássico",
+  "presetStudy": "Estudo",
+  "presetDeep": "Foco Profundo",
+  "presetSummary": "{focus} min foco · {short} min pausa · {long} min pausa longa",
+  "@presetSummary": {
+    "placeholders": {
+      "focus": {
+        "type": "int"
+      },
+      "short": {
+        "type": "int"
+      },
+      "long": {
+        "type": "int"
+      }
+    }
+  },
+  "cyclesBeforeLongBreak": "{value} ciclos antes da pausa longa",
+  "@cyclesBeforeLongBreak": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "settings": "Configurações",
+  "settingsSubtitle": "Ajuste seu caminho para o foco profundo.",
+  "timerPreferences": "Preferências do Timer",
+  "autoStartFocus": "Iniciar foco automaticamente",
+  "autoStartBreak": "Iniciar pausa automaticamente",
+  "feedback": "Feedback",
+  "soundEffects": "Efeitos sonoros",
+  "hapticVibration": "Vibração",
+  "completionSound": "Som de conclusão",
+  "appearance": "Aparência",
+  "language": "Idioma",
+  "systemDefault": "Padrão do sistema",
+  "portuguese": "Português",
+  "english": "Inglês",
+  "lightTheme": "Claro",
+  "darkTheme": "Escuro",
+  "systemTheme": "Sistema"
+}

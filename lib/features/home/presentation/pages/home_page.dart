@@ -41,55 +41,53 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment.topCenter,
-            radius: 1.2,
-            colors: [
-              colorScheme.surface,
-              Theme.of(context).scaffoldBackgroundColor,
-            ],
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          center: Alignment.topCenter,
+          radius: 1.2,
+          colors: [
+            colorScheme.surface,
+            Theme.of(context).scaffoldBackgroundColor,
+          ],
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
 
-                HomeHeader(
-                  onMenuTap: () {},
-                  onSettingsTap: () =>
-                      _openPresetBottomSheet(timer.selectedPreset),
-                ),
+              HomeHeader(
+                onMenuTap: () {},
+                onSettingsTap: () =>
+                    _openPresetBottomSheet(timer.selectedPreset),
+              ),
 
-                const Spacer(),
+              const Spacer(),
 
-                ModeChip(mode: timer.mode),
+              ModeChip(mode: timer.mode),
 
-                const SizedBox(height: 42),
+              const SizedBox(height: 42),
 
-                TimerCircle(
-                  progress: timer.progress,
-                  time: timer.formattedTime,
-                  sessionText: timer.sessionText,
-                ),
+              TimerCircle(
+                progress: timer.progress,
+                time: timer.formattedTime,
+                sessionText: timer.sessionText,
+              ),
 
-                const SizedBox(height: 48),
+              const SizedBox(height: 48),
 
-                Controls(
-                  isRunning: timer.isRunning,
-                  onPlay: controller.toggle,
-                  onReset: controller.reset,
-                  onSkip: controller.skip,
-                ),
+              Controls(
+                isRunning: timer.isRunning,
+                onPlay: controller.toggle,
+                onReset: controller.reset,
+                onSkip: controller.skip,
+              ),
 
-                const Spacer(),
-              ],
-            ),
+              const Spacer(),
+            ],
           ),
         ),
       ),

@@ -8,6 +8,8 @@ class StatsState {
     required this.currentStreak,
     required this.bestStreak,
     required this.recentSessions,
+    required this.focusMinutes,
+    required this.breakMinutes,
   });
 
   final int todayFocusMinutes;
@@ -16,6 +18,8 @@ class StatsState {
   final int currentStreak;
   final int bestStreak;
   final List<TimerHistoryEntry> recentSessions;
+  final int focusMinutes;
+  final int breakMinutes;
 
   factory StatsState.initial() {
     return const StatsState(
@@ -25,7 +29,23 @@ class StatsState {
       currentStreak: 0,
       bestStreak: 0,
       recentSessions: [],
+      focusMinutes: 0,
+      breakMinutes: 0,
     );
+  }
+
+  int get totalTrackedMinutes => focusMinutes + breakMinutes;
+
+  double get focusRatio {
+    if (totalTrackedMinutes == 0) return 0;
+    return focusMinutes / totalTrackedMinutes;
+  }
+
+  int get focusPercentage => (focusRatio * 100).round();
+
+  int get breakPercentage {
+    if (totalTrackedMinutes == 0) return 0;
+    return 100 - focusPercentage;
   }
 
   String get todayFocusFormatted {

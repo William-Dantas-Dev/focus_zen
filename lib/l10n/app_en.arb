@@ -1,0 +1,124 @@
+{
+  "@@locale": "en",
+  "appName": "Focus Zen",
+  "@appName": {
+    "description": "App name"
+  },
+  "chooseTimer": "Cycle Selection",
+  "@chooseTimer": {
+    "description": "Bottom sheet title for choosing a timer preset"
+  },
+  "focus": "Focus",
+  "shortBreak": "Short Break",
+  "longBreak": "Long Break",
+  "recentActivity": "Recent Activity",
+  "noSessionsYet": "No sessions yet. Start focusing!",
+  "completed": "Completed",
+  "skipped": "Skipped",
+  "today": "Today",
+  "efficiencyRatio": "Efficiency Ratio",
+  "focusPercentage": "Focus ({value}%)",
+  "breakPercentage": "Break ({value}%)",
+  "efficiencyDescription": "Near optimal work-rest balance.",
+  "weeklyProgress": "Weekly Progress",
+  "thisWeek": "This Week",
+  "weekRangeShort": "Mon - Sun",
+  "averageShort": "Avg. {value}",
+  "@averageShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesShort": "{value}m",
+  "@minutesShort": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesShort": "{hours}h {minutes}m",
+  "@hoursMinutesShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "todayFocus": "Today's Focus",
+  "sessionsCompleted": "{value} sessions completed",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "currentStreak": "Current Streak",
+  "daysCount": "{value} days",
+  "@daysCount": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "bestStreak": "Best streak: {value} days",
+  "@bestStreak": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "statsHeaderTitle": "Your Focus",
+  "statsHeaderSubtitle": "Track your progress and stay consistent.",
+  "presetQuick": "Quick Focus",
+  "presetClassic": "Classic",
+  "presetStudy": "Study",
+  "presetDeep": "Deep Work",
+  "presetSummary": "{focus} min focus · {short} min break · {long} min long break",
+  "@presetSummary": {
+    "placeholders": {
+      "focus": {
+        "type": "int"
+      },
+      "short": {
+        "type": "int"
+      },
+      "long": {
+        "type": "int"
+      }
+    }
+  },
+  "cyclesBeforeLongBreak": "{value} cycles before long break",
+  "@cyclesBeforeLongBreak": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "settings": "Settings",
+  "settingsSubtitle": "Tailor your path to deep focus.",
+  "timerPreferences": "Timer Preferences",
+  "autoStartFocus": "Auto-start focus",
+  "autoStartBreak": "Auto-start break",
+  "feedback": "Feedback",
+  "soundEffects": "Sound effects",
+  "hapticVibration": "Haptic vibration",
+  "completionSound": "Completion sound",
+  "appearance": "Appearance",
+  "language": "Language",
+  "systemDefault": "System default",
+  "portuguese": "Portuguese",
+  "english": "English",
+  "lightTheme": "Light",
+  "darkTheme": "Dark",
+  "systemTheme": "System"
+}

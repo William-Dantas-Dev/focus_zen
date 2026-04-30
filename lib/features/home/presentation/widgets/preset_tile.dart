@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/timer_preset_option.dart';
+import '../extensions/timer_preset_l10n.dart';
 
 class PresetTile extends StatelessWidget {
   const PresetTile({
@@ -16,6 +18,7 @@ class PresetTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -76,7 +79,7 @@ class PresetTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      preset.name,
+                      preset.name(l10n),
                       style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.w700,
@@ -84,7 +87,7 @@ class PresetTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      preset.summary,
+                      preset.summary(l10n),
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.55),
                         fontSize: 12,
@@ -92,7 +95,7 @@ class PresetTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '${preset.cycles} cycles before long break',
+                      l10n.cyclesBeforeLongBreak(preset.cycles),
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.50),
                         fontSize: 11,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/pomodoro_mode.dart';
+import '../extensions/pomodoro_mode_l10n.dart';
+
 
 class ModeChip extends StatelessWidget {
   const ModeChip({super.key, required this.mode});
@@ -9,6 +12,7 @@ class ModeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -49,7 +53,7 @@ class ModeChip extends StatelessWidget {
           const SizedBox(width: 8),
 
           Text(
-            mode.label,
+            mode.label(l10n),
             style: textTheme.labelMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.7),
               letterSpacing: 2,

@@ -23,9 +23,12 @@ class StatsController extends Notifier<StatsState> {
   Future<void> _loadStats() async {
     final entries = await ref.read(timerHistoryRepositoryProvider).getEntries();
 
-    final focusEntries =
-        entries.where((entry) => entry.mode == PomodoroMode.focus).toList()
-          ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
+    final sortedEntries = [...entries]
+      ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
+
+    final focusEntries = sortedEntries
+        .where((entry) => entry.mode == PomodoroMode.focus)
+        .toList();
 
     state = StatsState(
       todayFocusMinutes: _todayFocusMinutes(focusEntries),
@@ -34,6 +37,8 @@ class StatsController extends Notifier<StatsState> {
       currentStreak: _currentStreak(focusEntries),
       bestStreak: _bestStreak(focusEntries),
       recentSessions: focusEntries.take(5).toList(),
+      focusMinutes: _totalMinutesByMode(sortedEntries, PomodoroMode.focus),
+      breakMinutes: _totalBreakMinutes(sortedEntries),
     );
   }
 
@@ -114,6 +119,22 @@ class StatsController extends Notifier<StatsState> {
     }
 
     return best;
+  }
+
+  int _totalMinutesByMode(List<TimerHistoryEntry> entries, PomodoroMode mode) {
+    return entries
+        .where((entry) => entry.mode == mode)
+        .fold<int>(0, (total, entry) => total + entry.durationMinutes);
+  }
+
+  int _totalBreakMinutes(List<TimerHistoryEntry> entries) {
+    return entries
+        .where(
+          (entry) =>
+              entry.mode == PomodoroMode.shortBreak ||
+              entry.mode == PomodoroMode.longBreak,
+        )
+        .fold<int>(0, (total, entry) => total + entry.durationMinutes);
   }
 
   Set<DateTime> _activeDays(List<TimerHistoryEntry> entries) {

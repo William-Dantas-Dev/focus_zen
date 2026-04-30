@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../application/settings_controller.dart';
-import '../../data/models/app_theme_mode.dart';
 import '../widgets/about_focuszen_card.dart';
+import '../widgets/language_selector.dart';
 import '../widgets/settings_card.dart';
 import '../widgets/settings_header.dart';
 import '../widgets/settings_section_label.dart';
@@ -17,6 +17,9 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
     final settings = ref.watch(settingsControllerProvider);
     final settingsController = ref.read(settingsControllerProvider.notifier);
 
@@ -35,29 +38,29 @@ class SettingsPage extends ConsumerWidget {
             const SizedBox(height: 28),
 
             Text(
-              'Settings',
+              l10n.settings,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: AppColors.textPrimary,
+                color: colorScheme.onSurface,
                 fontWeight: FontWeight.w800,
               ),
             ),
             const SizedBox(height: 6),
             Text(
-              'Tailor your path to deep focus.',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
+              l10n.settingsSubtitle,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
             ),
 
             const SizedBox(height: 30),
 
-            const SettingsSectionLabel('TIMER PREFERENCES'),
+            SettingsSectionLabel(l10n.timerPreferences),
             const SizedBox(height: 10),
             SettingsCard(
               children: [
                 SettingsTile(
                   icon: Icons.timer_rounded,
-                  title: 'Auto-start focus',
+                  title: l10n.autoStartFocus,
                   trailing: Switch(
                     value: settings.autoStartFocus,
                     onChanged: settingsController.setAutoStartFocus,
@@ -65,42 +68,24 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 SettingsTile(
                   icon: Icons.hourglass_bottom_rounded,
-                  title: 'Auto-start break',
+                  title: l10n.autoStartBreak,
                   trailing: Switch(
                     value: settings.autoStartBreak,
                     onChanged: settingsController.setAutoStartBreak,
                   ),
                 ),
-                // const SettingsTile(
-                //   icon: Icons.tune_rounded,
-                //   title: 'Presets',
-                //   subtitle: 'Pomodoro',
-                //   trailing: Icon(
-                //     Icons.chevron_right_rounded,
-                //     color: AppColors.textMuted,
-                //   ),
-                // ),
-                // const SettingsTile(
-                //   icon: Icons.edit_rounded,
-                //   title: 'Custom duration',
-                //   subtitle: '45 min',
-                //   trailing: Icon(
-                //     Icons.chevron_right_rounded,
-                //     color: AppColors.textMuted,
-                //   ),
-                // ),
               ],
             ),
 
             const SizedBox(height: 26),
 
-            const SettingsSectionLabel('FEEDBACK'),
+            SettingsSectionLabel(l10n.feedback),
             const SizedBox(height: 10),
             SettingsCard(
               children: [
                 SettingsTile(
                   icon: Icons.volume_up_rounded,
-                  title: 'Sound effects',
+                  title: l10n.soundEffects,
                   trailing: Switch(
                     value: settings.soundEffects,
                     onChanged: settingsController.setSoundEffects,
@@ -108,19 +93,19 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 SettingsTile(
                   icon: Icons.vibration_rounded,
-                  title: 'Haptic vibration',
+                  title: l10n.hapticVibration,
                   trailing: Switch(
                     value: settings.hapticVibration,
                     onChanged: settingsController.setHapticVibration,
                   ),
                 ),
-                const SettingsTile(
+                SettingsTile(
                   icon: Icons.music_note_rounded,
-                  title: 'Completion sound',
+                  title: l10n.completionSound,
                   subtitle: 'Zen Gong',
                   trailing: Icon(
                     Icons.play_circle_fill_rounded,
-                    color: AppColors.textSecondary,
+                    color: colorScheme.onSurface.withValues(alpha: 0.65),
                   ),
                 ),
               ],
@@ -128,12 +113,18 @@ class SettingsPage extends ConsumerWidget {
 
             const SizedBox(height: 26),
 
-            const SettingsSectionLabel('APPEARANCE'),
+            SettingsSectionLabel(l10n.language),
+            const SizedBox(height: 10),
+            const SettingsCard(children: [LanguageSelector()]),
+
+            const SizedBox(height: 26),
+
+            SettingsSectionLabel(l10n.appearance),
             const SizedBox(height: 10),
             ThemeSelector(
-              selectedTheme: themeMode.label,
+              selectedTheme: themeMode,
               onChanged: (value) {
-                themeController.setTheme(value.toThemeMode());
+                themeController.setTheme(value);
               },
             ),
 

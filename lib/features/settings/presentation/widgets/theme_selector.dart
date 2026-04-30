@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_theme_mode_extension.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class ThemeSelector extends StatelessWidget {
   const ThemeSelector({
@@ -9,20 +10,26 @@ class ThemeSelector extends StatelessWidget {
     required this.onChanged,
   });
 
-  final String selectedTheme;
-  final ValueChanged<String> onChanged;
+  final ThemeMode selectedTheme;
+  final ValueChanged<ThemeMode> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final options = ['Light', 'Dark', 'System'];
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final options = [ThemeMode.light, ThemeMode.dark, ThemeMode.system];
 
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.045),
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.045)
+            : Colors.black.withValues(alpha: 0.035),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.07),
+          color: colorScheme.onSurface.withValues(alpha: 0.07),
         ),
       ),
       child: Row(
@@ -37,26 +44,27 @@ class ThemeSelector extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.primary.withValues(alpha: 0.18)
+                      ? colorScheme.primary.withValues(alpha: 0.18)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(999),
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.25),
+                            color: colorScheme.primary.withValues(alpha: 0.25),
                             blurRadius: 18,
                           ),
                         ]
                       : null,
                 ),
                 child: Text(
-                  option,
+                  option.label(l10n),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color:
-                            isSelected ? AppColors.primary : AppColors.textMuted,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.onSurface.withValues(alpha: 0.55),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

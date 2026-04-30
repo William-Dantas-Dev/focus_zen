@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 class EfficiencyRatioCard extends StatelessWidget {
-  const EfficiencyRatioCard({super.key});
+  const EfficiencyRatioCard({
+    super.key,
+    required this.focusPercentage,
+    required this.breakPercentage,
+    required this.progress,
+  });
+
+  final int focusPercentage;
+  final int breakPercentage;
+  final double progress;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -24,29 +36,29 @@ class EfficiencyRatioCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Efficiency Ratio',
+            l10n.efficiencyRatio,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w800,
-                ),
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           const SizedBox(height: 18),
           Row(
             children: [
               Text(
-                'Focus (80%)',
+                l10n.focusPercentage(focusPercentage),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const Spacer(),
               Text(
-                'Break (20%)',
+                l10n.breakPercentage(breakPercentage),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurface.withValues(alpha: 0.55),
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: colorScheme.onSurface.withValues(alpha: 0.55),
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -54,7 +66,7 @@ class EfficiencyRatioCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: LinearProgressIndicator(
-              value: 0.8,
+              value: progress.clamp(0.0, 1.0),
               minHeight: 8,
               backgroundColor: colorScheme.onSurface.withValues(alpha: 0.12),
               valueColor: AlwaysStoppedAnimation(colorScheme.primary),
@@ -62,11 +74,11 @@ class EfficiencyRatioCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Near optimal work-rest balance.',
+            l10n.efficiencyDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.45),
-                  fontStyle: FontStyle.italic,
-                ),
+              color: colorScheme.onSurface.withValues(alpha: 0.45),
+              fontStyle: FontStyle.italic,
+            ),
           ),
         ],
       ),
